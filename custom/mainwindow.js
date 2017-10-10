@@ -1,5 +1,6 @@
 var FORMER_LOCATION_PATH = null;
 function start(object) {
+    
     var path = $(object).attr("name");
     console.log($(object).attr("name"));
     save();
@@ -31,11 +32,22 @@ function start(object) {
 }
 
 function make_general(object, path){
+    var level = "easy", material = "";
+    var fs = require("fs");
+    var json = JSON.parse(fs.readFileSync(path + "/index.json", "utf-8"));
+    for(var i = 0; i < json.list.length; i+=1){
+        if(json.list[i].elementname == $(object).htm()){
+            level = json.list[i].level;
+            material = json.list[i].necessarymaterial;
+            break;
+        }
+    }
+    
     var $tab = $("<div>", {"id": "general", "class": "tab-pane fade"});
     var $namelabel = $("<label>", {"for": "rename"}).html("הכנס שם"),
         $rename = $("<input>", {"type": "text", "id": "rename", "class": "form-control", "value": $(object).html()}),
         $materiallabel = $("<label>", {"for": "material"}).html("הכנס חומר"),
-        $material = $("<input>", {"type": "text", "id": "material", "class": "form-control"}),
+        $material = $("<input>", {"type": "text", "id": "material", "class": "form-control", "value": material}),
         $selectlabel = $("<label>", {"for": "selectlevel"}).html("הכנס רמה"),
         $update = $("<input>", {"type": "button", "value": "שנה", "class": "btn btn-default general-button"}),
         $br = $("<br>");
@@ -43,6 +55,7 @@ function make_general(object, path){
     $select.append($("<option>", {"value": "easy"}).html("קל"));
     $select.append($("<option>", {"value": "medium"}).html("בינוני"));
     $select.append($("<option>", {"value": "hard"}).html("קשה"));
+    $select.val(level);
     
     $update.click( function () {
         $(object).html($("#rename").val());
