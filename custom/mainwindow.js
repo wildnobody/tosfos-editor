@@ -33,20 +33,35 @@ function start(object) {
 function make_general(object, path){
     var $tab = $("<div>", {"id": "general", "class": "tab-pane fade"});
     var $namelabel = $("<label>", {"for": "rename"}).html("הכנס שם"),
-        $rename = $("<input>", {"type": "text", "id": "rename", "class": "form-control"}),
+        $rename = $("<input>", {"type": "text", "id": "rename", "class": "form-control", "value": $(object).html()}),
+        $materiallabel = $("<label>", {"for": "material"}).html("הכנס חומר"),
+        $material = $("<input>", {"type": "text", "id": "material", "class": "form-control"}),
+        $selectlabel = $("<label>", {"for": "selectlevel"}).html("הכנס רמה"),
         $update = $("<input>", {"type": "button", "value": "שנה", "class": "btn btn-default general-button"}),
-        $br = $("<br>"),
-        $changeimage = $("<input>", {"type": "button", "value": "בחר תמונה", "class": "btn btn-default general-button"});
+        $br = $("<br>");
+    var $select = $("<select>", {"class": "form-control", "id": "selectlevel"});
+    $select.append($("<option>", {"value": "easy"}).html("קל"));
+    $select.append($("<option>", {"value": "medium"}).html("בינוני"));
+    $select.append($("<option>", {"value": "hard"}).html("קשה"));
+    
     $update.click( function () {
         $(object).html($("#rename").val());
         $($("#main").children().get(0)).html($("#rename").val());
-        indexjsonchange($("#rename").val(), path.substring(0, path.lastIndexOf("/")), path.substring(path.lastIndexOf("/") + 1));
+        indexjsonchange($("#rename").val(),
+                 path.substring(0, path.lastIndexOf("/")), 
+                 path.substring(path.lastIndexOf("/") + 1), 
+                 $("#selectlevel option:selected").val(), 
+                 $("#material").val()
+        );
     });
     $tab.append($namelabel);
     $tab.append($rename);
+    $tab.append($materiallabel);
+    $tab.append($material);
+    $tab.append($selectlabel);
+    $tab.append($select);
     $tab.append($update);
     $tab.append($br);
-    $tab.append($changeimage);
     return $tab;
 }
 

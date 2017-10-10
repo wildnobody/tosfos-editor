@@ -1,16 +1,16 @@
-function indexjsonchange(name, path, foldername) {
+function indexjsonchange(name, path, foldername, level, necessarymaterial) {
     var fs = require("fs");
     fs.readFile(path + "/index.json", "utf-8", function(err, data) {
         if (err){
             console.log(err);
         } else {
             var json = JSON.parse(data);
-            writefile(path + "/index.json", replaceinjson(json, foldername, name, "changename")); 
+            writefile(path + "/index.json", replaceinjson(json, foldername, name, level, necessarymaterial, "changename")); 
         }
     });
 }
 
-function replaceinjson (data, foldername, name, command){
+function replaceinjson (data, foldername, name, level, necessarymaterial, command){
     var v;
     for (var i = 0; i < data.list.length; i+=1){
         v = data.list[i];
@@ -18,6 +18,8 @@ function replaceinjson (data, foldername, name, command){
             switch (command){
                 case "changename":
                     data.list[i].elementname = name;
+                    data.list[i].level = level;
+                    data.list[i].necessarymaterial = necessarymaterial;
                     break;
                 case "moveup":
                     if(i > 0){
@@ -116,7 +118,7 @@ function moveup(button, path){
     var fs = require("fs");
     var json = JSON.parse(fs.readFileSync(path + "/index.json", "utf-8"));
     var filname = FORMER_LOCATION_PATH.substring(FORMER_LOCATION_PATH.lastIndexOf("/") + 1);
-    writefile(path + "/index.json", replaceinjson(json, filname, null, "moveup"));
+    writefile(path + "/index.json", replaceinjson(json, filname, null, null, null, "moveup"));
     $(button).prop("disabled", false);
     $(button).next().prop("disabled", false);
 }
@@ -131,7 +133,7 @@ function movedown(button, path){
     var json = JSON.parse(fs.readFileSync(path + "/index.json", "utf-8"));
     var filname = FORMER_LOCATION_PATH.substring(FORMER_LOCATION_PATH.lastIndexOf("/") + 1);
     console.log(FORMER_LOCATION_PATH);
-    writefile(path + "/index.json", replaceinjson(json, filname, null, "movedown"));
+    writefile(path + "/index.json", replaceinjson(json, filname, null, null, null, "movedown"));
     $(button).prop("disabled", false);
     $(button).prev().prop("disabled", false);
 }
@@ -157,9 +159,11 @@ function newtosfos(path){
     
     var foldername = "folder" + finalnum;
     var elementname = "תוספות" + finalnum;
+    var level = "easy";
+    var necessarymaterial = "";
     
     var qjson = {"questions": []};
-    json.list.push({"foldername":foldername, "elementname":elementname});
+    json.list.push({"foldername":foldername, "elementname":elementname, "level":level, "necessarymaterial":necessarymaterial});
     writefile(path + "/index.json", json);
     fs.mkdirSync(path + "/" + foldername);
     fs.mkdirSync(path + "/" + foldername + "/images");
@@ -182,7 +186,7 @@ function removetosfos(path){
     var json = JSON.parse(fs.readFileSync(path + "/index.json", "utf-8"));
     var listelement = $($("#sidebar-options").find(".active")[0]);
     var inner = $(listelement.children()[0]).attr("name");
-    writefile(path + "/index.json", replaceinjson(json, inner.substring(inner.lastIndexOf("/") + 1), null, "remove"));
+    writefile(path + "/index.json", replaceinjson(json, inner.substring(inner.lastIndexOf("/") + 1), null, null, null, "remove"));
     deleteFolderRecursive(inner);
     listelement.remove();
     $("#main").empty();
