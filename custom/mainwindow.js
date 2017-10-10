@@ -1,3 +1,4 @@
+var projectpath = "project";
 var FORMER_LOCATION_PATH = null;
 function start(object) {
     
@@ -34,9 +35,9 @@ function start(object) {
 function make_general(object, path){
     var level = "easy", material = "";
     var fs = require("fs");
-    var json = JSON.parse(fs.readFileSync(path + "/index.json", "utf-8"));
+    var json = JSON.parse(fs.readFileSync(projectpath + "/index.json", "utf-8"));
     for(var i = 0; i < json.list.length; i+=1){
-        if(json.list[i].elementname == $(object).htm()){
+        if(json.list[i].elementname == $(object).html()){
             level = json.list[i].level;
             material = json.list[i].necessarymaterial;
             break;
